@@ -1,82 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Unity WebGL Project</title>
     <style>
-        body {
-            margin: 0;
-            background: #000;
-            overflow: hidden;
-        }
-
-        #unity-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        #unity-loading-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: #000;
-        }
-
-        #unity-progress-bar-full {
-            width: 100%;
-            height: 100%;
-            background: #00bcd4;
-        }
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      #unity-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: black;
+      }
+      #unity-loading-bar {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        text-align: center;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="unity-container">
-        <div id="unity-loading-bar">
-            <div style="width: 200px; background: #555; height: 4px;">
-                <div id="unity-progress-bar-full" style="width: 0%;"></div>
-            </div>
-        </div>
-        <canvas id="unity-canvas"></canvas>
+      <div id="unity-loading-bar">
+        <p>Loading...</p>
+      </div>
     </div>
+
     <script>
-        // تغییر مسیر فایل‌های Build به پوشه درست
-        const buildUrl = "unity-webgl-project/Build"; // مسیر صحیح فایل‌ها
-        const loaderUrl = buildUrl + "/Build.loader.js";
-        const config = {
-            dataUrl: buildUrl + "/Build.data",
-            frameworkUrl: buildUrl + "/Build.framework.js",
-            codeUrl: buildUrl + "/Build.wasm",
-            streamingAssetsUrl: "StreamingAssets",
-            companyName: "DefaultCompany",
-            productName: "WebGL Build",
-            productVersion: "1.0",
-        };
+      const loaderUrl = "./Build/Build.loader.js";
+      const dataUrl = "./Build/Build.data";
+      const frameworkUrl = "./Build/Build.framework.js";
+      const codeUrl = "./Build/Build.wasm";
 
-        const container = document.querySelector("#unity-container");
-        const canvas = document.querySelector("#unity-canvas");
-        const loadingBar = document.querySelector("#unity-loading-bar");
-        const progressBarFull = document.querySelector("#unity-progress-bar-full");
+      const container = document.querySelector("#unity-container");
+      const loadingBar = document.querySelector("#unity-loading-bar");
 
-        const script = document.createElement("script");
-        script.src = loaderUrl;
-        script.onload = () => {
-            createUnityInstance(canvas, config, (progress) => {
-                progressBarFull.style.width = 100 * progress + "%";
-            }).then((unityInstance) => {
-                loadingBar.style.display = "none";
-            }).catch((message) => {
-                alert(message);
-            });
-        };
-        document.body.appendChild(script);
+      createUnityInstance(container, {
+        dataUrl: dataUrl,
+        frameworkUrl: frameworkUrl,
+        codeUrl: codeUrl,
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Your Company",
+        productName: "Your Product",
+        productVersion: "1.0",
+      })
+        .then((unityInstance) => {
+          loadingBar.style.display = "none";
+        })
+        .catch((message) => {
+          console.error(message);
+        });
     </script>
-</body>
+
+    <script src="./Build/Build.loader.js"></script>
+  </body>
 </html>
